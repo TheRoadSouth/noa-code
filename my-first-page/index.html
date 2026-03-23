@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Noa's Page</title>
+  <style>
+    /* CSS controls how things LOOK */
+    /* Try changing the colors and sizes! */
+
+    body {
+      background: #1a0a2e;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #aa88ff;
+      font-size: 48px;
+    }
+
+    .art-box {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      background: linear-gradient(135deg, #aa88ff, #ff88aa, #88aaff);
+      border-radius: 20px;
+      animation: spin 10s linear infinite;
+    }
+
+    /* This makes the box spin! */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* TRY THIS: Change 'spin' to something else */
+    /* TRY THIS: Change the colors in the gradient */
+    /* TRY THIS: Change border-radius to 50% (makes it a circle!) */
+    /* TRY THIS: Add more colors to the gradient */
+  </style>
+</head>
+<body>
+  <h1>Noa's Art Studio</h1>
+  <p>This box is animated with pure CSS!</p>
+  <div class="art-box"></div>
+  <p>Edit the code to make it yours.</p>
+</body>
+</html>
