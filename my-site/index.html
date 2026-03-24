@@ -188,6 +188,28 @@
       100% { opacity: 0; transform: scale(0); }  /* shrinks to nothing */
     }
 
+    /* FADE-IN SECTIONS — sections are invisible until you scroll to them */
+    .fade-in {
+      opacity: 0;                          /* starts invisible */
+      transform: translateY(30px);          /* starts 30px below its real position */
+      transition: opacity 0.8s ease, transform 0.8s ease;  /* takes 0.8s to appear */
+    }
+
+    .fade-in.visible {
+      opacity: 1;                          /* fully visible */
+      transform: translateY(0);            /* back to normal position */
+    }
+
+    /* P5.JS CANVAS — the animated background behind the hero */
+    #p5-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;   /* behind everything in the hero */
+    }
+
     /* TRY THIS: Change the colors throughout! */
     /* TRY THIS: Add more sections! */
     /* TRY THIS: Change the fonts! */
@@ -195,8 +217,12 @@
 </head>
 <body>
 
+  <!-- P5.JS SCRIPT — we load the library from a CDN (online) -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
   <!-- HERO -->
   <div class="hero">
+    <div id="p5-bg"></div>
     <div class="subtitle">Welcome to</div>
     <h1>Noa's World</h1>
     <p id="typed"></p>
@@ -204,14 +230,14 @@
   </div>
 
   <!-- ABOUT -->
-  <div class="section">
+  <div class="section fade-in">
     <h2>About Me</h2>
     <p>Hey! I'm Noa. I love drawing, animation, anime, and riding my mountain bike on trails. I'm learning to code and make digital art.</p>
     <p>I'm 13 and I just started building websites. This is my first one.</p>
   </div>
 
   <!-- INTERESTS -->
-  <div class="section">
+  <div class="section fade-in">
     <h2>What I'm Into</h2>
     <div class="grid">
       <div class="card">
@@ -243,6 +269,76 @@
   </div>
 
   <script>
+    // ===== P5.JS ANIMATED BACKGROUND =====
+    // This creates the orbiting circles you made before, but as a website background!
+    // 'new p5()' creates a p5 sketch attached to a specific element
+
+    new p5(function(p) {
+      p.setup = function() {
+        // Create canvas inside the #p5-bg div, matching the hero size
+        var hero = document.querySelector('.hero');
+        var canvas = p.createCanvas(hero.offsetWidth, hero.offsetHeight);
+        canvas.parent('p5-bg');  // attach to our container
+      };
+
+      p.draw = function() {
+        // Semi-transparent background = trails
+        p.background(106, 144, 112, 15);  // your green, mostly transparent
+
+        // First orbiter — green glow
+        var x1 = p.width/2 + p.cos(p.frameCount * 0.015) * p.width * 0.3;
+        var y1 = p.height/2 + p.sin(p.frameCount * 0.02) * p.height * 0.3;
+        var size1 = 20 + p.sin(p.frameCount * 0.04) * 10;
+        p.noStroke();
+        p.fill(46, 245, 69, 20);   // outer glow
+        p.circle(x1, y1, size1 * 4);
+        p.fill(46, 245, 69, 60);   // inner
+        p.circle(x1, y1, size1);
+
+        // Second orbiter — lighter green
+        var x2 = p.width/2 + p.cos(p.frameCount * 0.025) * p.width * 0.2;
+        var y2 = p.height/2 + p.sin(p.frameCount * 0.015) * p.height * 0.25;
+        p.fill(136, 255, 195, 15);
+        p.circle(x2, y2, size1 * 3);
+        p.fill(136, 255, 195, 50);
+        p.circle(x2, y2, size1 * 0.8);
+
+        // Third orbiter — subtle white
+        var x3 = p.width/2 + p.cos(p.frameCount * 0.01) * p.width * 0.35;
+        var y3 = p.height/2 + p.sin(p.frameCount * 0.03) * p.height * 0.2;
+        p.fill(255, 255, 255, 8);
+        p.circle(x3, y3, size1 * 5);
+      };
+
+      // Resize canvas if window changes
+      p.windowResized = function() {
+        var hero = document.querySelector('.hero');
+        p.resizeCanvas(hero.offsetWidth, hero.offsetHeight);
+      };
+    });
+
+
+    // ===== FADE-IN ON SCROLL =====
+    // IntersectionObserver watches elements and tells us when they appear on screen
+
+    var observer = new IntersectionObserver(function(entries) {
+      // 'entries' is a list of elements being watched
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          // Element is now visible on screen — add the 'visible' class
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.15  // trigger when 15% of the element is visible
+    });
+
+    // Tell the observer to watch all elements with class 'fade-in'
+    document.querySelectorAll('.fade-in').forEach(function(el) {
+      observer.observe(el);
+    });
+
+
     // ===== TYPING ANIMATION =====
     // This makes text appear one letter at a time, like someone is typing it
 
