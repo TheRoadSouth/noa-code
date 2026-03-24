@@ -327,7 +327,42 @@
       setTimeout(function() {
         dot.remove();
       }, 1000);
+
+
     });
+
+    // ===== CLICKABLE CARDS =====
+    // When you click a card, it reveals a secret message
+
+    // Hidden messages for each card (matches the order in your HTML)
+    var secrets = [
+      "I've been drawing since I was 5!",
+      "My favorite trail has 12 switchbacks 🌲",
+      "I built this whole site from scratch!",
+      "Spirited Away changed my life ✨"
+    ];
+
+    // Get ALL the cards on the page
+    var cards = document.querySelectorAll('.card');
+
+    // Loop through each card and add a click listener
+    for (var i = 0; i < cards.length; i++) {
+      (function(index) {
+        cards[index].addEventListener('click', function() {
+          var cardText = this.querySelector('p');
+
+          if (cardText.dataset.original) {
+            cardText.textContent = cardText.dataset.original;
+            cardText.dataset.original = '';
+            this.style.background = '';
+          } else {
+            cardText.dataset.original = cardText.textContent;
+            cardText.textContent = secrets[index];
+            this.style.background = 'rgba(46, 245, 69, 0.15)';
+          }
+        });
+      })(i);
+    }
   </script>
 </body>
 </html>
